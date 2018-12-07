@@ -18,6 +18,13 @@ The following DNS Providers/Validators is supported
 docker run -d --name nginx-rp -p 80:80 -p 443:443 -e NGINX_BACKEND_1="example.com max_fails=3 fail_timeout=30s" danielbjornadal/nginx-rp-letsencrypt
 ```
 
+## Linked backend with selfsigned certificate
+
+```console
+docker run -d --name nginx-rp --link some_container:backend -p 80:80 -p 443:443 -e NGINX_BACKEND_1="backend max_fails=3 fail_timeout=30s" danielbjornadal/nginx-rp-letsencrypt
+```
+
+
 ## Single backend with Cloudflare as DNS Provider
 
 ```console
