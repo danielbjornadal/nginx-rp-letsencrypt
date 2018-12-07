@@ -15,10 +15,10 @@ RUN set -x \
 
 COPY conf.d /etc/nginx/conf.d
 COPY nginx.conf /etc/nginx/
-COPY start.sh .
+COPY entrypoint.sh .
 COPY credentials credentials
 COPY cron.d /etc/cron.d
-RUN chmod 755 start.sh \
+RUN chmod 755 entrypoint.sh \
     && chmod -R 600 credentials \
     && useradd -ms /bin/bash nginx
 
