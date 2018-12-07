@@ -9,7 +9,7 @@ RUN set -x \
     && add-apt-repository universe \
     && add-apt-repository ppa:certbot/certbot \
     && apt-get update \
-	&& apt-get -y install cron gettext-base certbot python-certbot-nginx python3-acme python3-certbot-dns-cloudflare \
+    && apt-get -y install cron gettext-base certbot python-certbot-nginx python3-acme python3-certbot-dns-cloudflare \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -39,5 +39,5 @@ ENV NGINX_BACKEND_1="example.com max_fails=3 fail_timeout=30s"
 ENV NGINX_BACKEND_2=""
 ENV NGINX_BACKEND_3=""
 
-ENTRYPOINT ["/start.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
 CMD [ "nginx" ]

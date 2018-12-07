@@ -15,13 +15,20 @@ The following DNS Providers/Validators is supported
 ## Single backend with selfsigned certificate
 
 ```console
-docker run -d --name nginx-rp -p 80:80 -p 443:443 -e NGINX_BACKEND_1="example.com max_fails=3 fail_timeout=30s" bjornadalno/nginx-rp-letsencrypt
+docker run -d --name nginx-rp \
+    -p 80:80 -p 443:443 \
+    -e NGINX_BACKEND_1="example.com max_fails=3 fail_timeout=30s" \
+    bjornadalno/nginx-rp-letsencrypt
 ```
 
 ## Linked backend with selfsigned certificate
 
 ```console
-docker run -d --name nginx-rp --link some_container:backend -p 80:80 -p 443:443 -e NGINX_BACKEND_1="backend max_fails=3 fail_timeout=30s" bjornadalno/nginx-rp-letsencrypt
+docker run -d --name nginx-rp \
+    --link some_container:backend \
+    -p 80:80 -p 443:443 \
+    -e NGINX_BACKEND_1="backend max_fails=3 fail_timeout=30s" \
+    bjornadalno/nginx-rp-letsencrypt
 ```
 
 
@@ -39,7 +46,3 @@ docker run -d --name nginx-rp \
     -e LETSENCRYPT_DOMAINS="<example.com,*.example.com>" \
     bjornadalno/nginx-rp-letsencrypt
 ```
-
-
-ENV =
-ENV =

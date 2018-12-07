@@ -13,7 +13,7 @@ for v in $(compgen -e); do
     sed -i "s|\\\$ENV{\"${v}\"}|${!v}|g" /etc/nginx/nginx.conf
 done
 
-# Remove lines containing only ;
+# Remove lines containing only: server;
 sed -i '/^\s*server\s*;$/d' /etc/nginx/conf.d/default.conf
 
 # Populate the credentials file from environment variables
@@ -29,7 +29,8 @@ fi
 if [[ ${DNS_PROVIDER,,} = cloudflare ]];
 then
     dns_provider_string="--dns-cloudflare --dns-cloudflare-credentials /credentials/${DNS_PROVIDER,,}"
-    certbot certonly -n --agree-tos --test-cert -m ${LETSENCRYPT_EMAIL} $dns_provider_string --cert-name nginx -d "${LETSENCRYPT_DOMAINS}"
+    # certbot certonly -n --agree-tos --test-cert -m ${LETSENCRYPT_EMAIL} $dns_provider_string --cert-name nginx -d "${LETSENCRYPT_DOMAINS}"
+    certbot certonly -n --agree-tos -m ${LETSENCRYPT_EMAIL} $dns_provider_string --cert-name nginx -d "${LETSENCRYPT_DOMAINS}"
     crontab /etc/cron.d/*
     /etc/init.d/cron start
 fi
