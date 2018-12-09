@@ -21,13 +21,13 @@ docker run -d --name nginx-rp \
     bjornadalno/nginx-rp-letsencrypt
 ```
 
-## Linked backend with selfsigned certificate
+## Linked backend with selfsigned certificate (backend use port 8080)
 
 ```console
 docker run -d --name nginx-rp \
     --link some_container:backend \
     -p 80:80 -p 443:443 \
-    -e NGINX_BACKEND_1="backend max_fails=3 fail_timeout=30s" \
+    -e NGINX_BACKEND_1="backend:8080 max_fails=3 fail_timeout=30s" \
     bjornadalno/nginx-rp-letsencrypt
 ```
 
