@@ -1,12 +1,6 @@
 #!/bin/bash
 set -e
 
-if [[ ! -f /credentials/${DNS_PROVIDER,,} ]]
-then
-    echo "DNS_PROVIDER not supported"
-    exit 1
-fi
-
 # Replace all variables
 for v in $(compgen -e); do
     sed -i "s|\\\$ENV{\"${v}\"}|${!v}|g" /etc/nginx/conf.d/*
@@ -40,6 +34,12 @@ fi
 # DNS Challenge Validation
 if [[ ${LETSENCRYPT_CHALLENGE,,} = dns ]];
 then
+
+    if [[ ! -f /credentials/${DNS_PROVIDER,,} ]]
+    then
+        echo "DNS_PROVIDER not supported"
+        exit 1
+    fi
     # Run certbot
     if [[ ${DNS_PROVIDER,,} = cloudflare ]];
     then
