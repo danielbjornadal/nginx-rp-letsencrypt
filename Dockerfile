@@ -22,12 +22,10 @@ RUN chmod 755 entrypoint.sh \
     && chmod -R 600 credentials \
     && useradd -ms /bin/bash nginx
 
-
-
 # Let's Encrypt Configuration
 ENV LETSENCRYPT_CHALLENGE=http
 ENV LETSENCRYPT_EMAIL=
-ENV LETSENCRYPT_DOMAINS=
+ENV LETSENCRYPT_DOMAINS=example.com
 
 # DNS Providers
 ENV DNS_PROVIDER=
@@ -37,9 +35,10 @@ ENV CLOUDFLARE_KEY=
 # Nginx Configuration
 ENV NGINX_THREADS=2
 ENV NGINX_SSL_PROTOCOLS="TLSv1.1 TLSv1.2"
-ENV NGINX_SERVER_NAME=localhost
-ENV NGINX_BACKEND_1="example.com max_fails=3 fail_timeout=30s"
+ENV NGINX_SERVER_NAME=example.com
+ENV NGINX_BACKEND_1="backend_url max_fails=3 fail_timeout=30s"
 ENV NGINX_BACKEND_2=""
 ENV NGINX_BACKEND_3=""
 
 ENTRYPOINT ["/entrypoint.sh"]
+CMD [ "nginx" ]
