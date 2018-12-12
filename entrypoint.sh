@@ -1,16 +1,17 @@
 #!/bin/bash
 set -e
 
-certbot_args=
-
-# Replace all variables
+# Replace all variables in configuration files
 for v in $(compgen -e); do
     sed -i "s|\\\$ENV{\"${v}\"}|${!v}|g" /etc/nginx/conf.d/*
     sed -i "s|\\\$ENV{\"${v}\"}|${!v}|g" /etc/nginx/nginx.conf
+    # more files can be added here
 done
 
 # Remove lines containing only: server;
 sed -i '/^\s*server\s*;$/d' /etc/nginx/conf.d/default.conf
+
+echo "Using Let's Encrypt Challenge: ${LETSENCRYPT_CHALLENGE,,}"
 
 # Selfsigned
 if [[ ${LETSENCRYPT_CHALLENGE,,} = selfsigned ]] || [[ -z ${LETSENCRYPT_CHALLENGE} ]];
@@ -21,20 +22,27 @@ then
     cat /etc/letsencrypt/live/nginx/fullchain.pem
 fi
 
-if [[ -z ${STAGING} ]];
-then
-    certbot_args=--staging
-fi
+certbotRenew() {
+    echo "Certificate and key was found. Checking for renewal ..."
+    certbot renew --no-self-upgrade || echo "Something went wrong with the certificate renewal process" && cat /var/log/letsencrypt/letsencrypt.log && exit 1
+}
 
 # HTTP Challenge Validation
-if [[ ${LETSENCRYPT_CHALLENGE,,} = http ]] && [[ ! -f /etc/letsencrypt/live/nginx/privkey.pem ]] && [[ ! -f /etc/letsencrypt/live/nginx/fullchain.pem ]];
+if [[ ${LETSENCRYPT_CHALLENGE,,} = http ]];
 then
-    certbot --nginx -n --agree-tos -m ${LETSENCRYPT_EMAIL} --preferred-challenges http --cert-name nginx -d ${NGINX_SERVER_NAME,,} ${certbot_args}
+    if [[ ! -f /etc/letsencrypt/live/nginx/privkey.pem ]] && [[ ! -f /etc/letsencrypt/live/nginx/fullchain.pem ]];
+    then
+        echo "Certificate and key not found. Creating and validating ..."
+        certbot certonly --standalone -n --agree-tos -m ${LETSENCRYPT_EMAIL} --preferred-challenges http --cert-name nginx -d ${NGINX_SERVER_NAME,,} ${CERTBOT_ARGS} \ 
+        || echo "Something went wrong." && cat /var/log/letsencrypt/letsencrypt.log && exit 1
+    else
+        certbotRenew
+    fi
 fi
 
 
 # DNS Challenge Validation
-if [[ ${LETSENCRYPT_CHALLENGE,,} = dns ]] && [[ ! -f /etc/letsencrypt/live/nginx/privkey.pem ]] && [[ ! -f /etc/letsencrypt/live/nginx/fullchain.pem ]];
+if [[ ${LETSENCRYPT_CHALLENGE,,} = dns ]];
 then
 
     if [[ ! -f /credentials/${DNS_PROVIDER,,} ]]
@@ -43,14 +51,19 @@ then
         exit 1
     fi
 
-    # Populate the credentials file from environment variables
-    envsubst < /credentials/${DNS_PROVIDER,,} > /credentials/${DNS_PROVIDER,,}
-
-    # Run certbot
-    if [[ ${DNS_PROVIDER,,} = cloudflare ]];
+    if [[ ! -f /etc/letsencrypt/live/nginx/privkey.pem ]] && [[ ! -f /etc/letsencrypt/live/nginx/fullchain.pem ]];
     then
-        dns_provider_string="--dns-cloudflare --dns-cloudflare-credentials /credentials/${DNS_PROVIDER,,}"
-        certbot certonly -n --agree-tos -m ${LETSENCRYPT_EMAIL} $dns_provider_string --cert-name nginx -d "${LETSENCRYPT_DOMAINS}"
+        # Populate the credentials file from environment variables
+        envsubst < /credentials/${DNS_PROVIDER,,} > /credentials/${DNS_PROVIDER,,}
+
+        # Run certbot
+        if [[ ${DNS_PROVIDER,,} = cloudflare ]];
+        then
+            dns_provider_string="--dns-cloudflare --dns-cloudflare-credentials /credentials/${DNS_PROVIDER,,}"
+            certbot certonly -n --agree-tos -m ${LETSENCRYPT_EMAIL} $dns_provider_string --cert-name nginx -d "${LETSENCRYPT_DOMAINS}"
+        fi
+    else
+        certbotRenew
     fi
 fi
 
