@@ -22,14 +22,17 @@ RUN chmod 755 entrypoint.sh \
     && chmod -R 600 credentials \
     && useradd -ms /bin/bash nginx
 
-# DNS Providers
-ENV DNS_PROVIDER=selfsigned
-ENV CLOUDFLARE_EMAIL=
-ENV CLOUDFLARE_KEY=
+
 
 # Let's Encrypt Configuration
+ENV LETSENCRYPT_CHALLENGE=http
 ENV LETSENCRYPT_EMAIL=
 ENV LETSENCRYPT_DOMAINS=
+
+# DNS Providers
+ENV DNS_PROVIDER=
+ENV CLOUDFLARE_EMAIL=
+ENV CLOUDFLARE_KEY=
 
 # Nginx Configuration
 ENV NGINX_THREADS=2
@@ -40,4 +43,3 @@ ENV NGINX_BACKEND_2=""
 ENV NGINX_BACKEND_3=""
 
 ENTRYPOINT ["/entrypoint.sh"]
-CMD [ "nginx" ]
