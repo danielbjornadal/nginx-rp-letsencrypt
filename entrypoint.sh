@@ -24,7 +24,7 @@ fi
 
 certbotRenew() {
     echo "Certificate and key was found. Checking for renewal ..."
-    certbot renew --no-self-upgrade || echo "Something went wrong with the certificate renewal process" && cat /var/log/letsencrypt/letsencrypt.log && exit 1
+    certbot renew --no-self-upgrade || (echo "Something went wrong with the certificate renewal process" && cat /var/log/letsencrypt/letsencrypt.log && exit 1)
 }
 
 # HTTP Challenge Validation
@@ -33,8 +33,7 @@ then
     if [[ ! -f /etc/letsencrypt/live/nginx/privkey.pem ]] && [[ ! -f /etc/letsencrypt/live/nginx/fullchain.pem ]];
     then
         echo "Certificate and key not found. Creating and validating ..."
-        certbot certonly --standalone -n --agree-tos -m ${LETSENCRYPT_EMAIL} --preferred-challenges http --cert-name nginx -d ${NGINX_SERVER_NAME,,} ${CERTBOT_ARGS} \ 
-        || echo "Something went wrong." && cat /var/log/letsencrypt/letsencrypt.log && exit 1
+        certbot certonly --standalone -n --agree-tos -m ${LETSENCRYPT_EMAIL} --preferred-challenges http --cert-name nginx -d ${NGINX_SERVER_NAME,,} ${CERTBOT_ARGS} || (echo "Something went wrong." && cat /var/log/letsencrypt/letsencrypt.log && exit 1)
     else
         certbotRenew
     fi
