@@ -31,18 +31,31 @@ docker run -d --name nginx-rp \
     bjornadalno/nginx-rp-letsencrypt
 ```
 
+## Single backend with with HTTP validation
+
+```console
+docker run -d --name nginx-rp \
+    -p 80:80 -p 443:443 \
+    -e NGINX_SERVER_NAME="example.com" \
+    -e NGINX_BACKEND_1="<bakend[:port]> max_fails=3 fail_timeout=30s" \
+    -e LETSENCRYPT_CHALLENGE="http" \
+    -e LETSENCRYPT_EMAIL="<your email>" \
+    -e LETSENCRYPT_DOMAINS="example.com" \
+    bjornadalno/nginx-rp-letsencrypt
+```
 
 ## Single backend with Cloudflare as DNS Provider
 
 ```console
 docker run -d --name nginx-rp \
     -p 80:80 -p 443:443 \
-    -e NGINX_SERVER_NAME="yourdomain.com" \
-    -e NGINX_BACKEND_1="example.com max_fails=3 fail_timeout=30s" \
+    -e NGINX_SERVER_NAME="example.com" \
+    -e NGINX_BACKEND_1="<bakend[:port]> max_fails=3 fail_timeout=30s" \
     -e DNS_PROVIDER="cloudflare" \
     -e CLOUDFLARE_EMAIL="<your cloudflare email>" \
     -e CLOUDFLARE_KEY="<API key provided by cloudflare>" \
+    -e LETSENCRYPT_CHALLENGE="dns" \
     -e LETSENCRYPT_EMAIL="<your email>" \
-    -e LETSENCRYPT_DOMAINS="<example.com,*.example.com>" \
+    -e LETSENCRYPT_DOMAINS="example.com[,*.example.com]" \
     bjornadalno/nginx-rp-letsencrypt
 ```
