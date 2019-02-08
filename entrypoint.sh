@@ -44,7 +44,7 @@ fi
 if [[ ${LETSENCRYPT_CHALLENGE,,} = dns ]];
 then
 
-    if [[ ! -f /credentials/${DNS_PROVIDER,,} ]]
+    if [[ ! -f /credentials/${DNS_PROVIDER,,}.template ]]
     then
         echo "DNS_PROVIDER not supported"
         exit 1
@@ -53,7 +53,7 @@ then
     if [[ ! -f /etc/letsencrypt/live/nginx/privkey.pem ]] && [[ ! -f /etc/letsencrypt/live/nginx/fullchain.pem ]];
     then
         # Populate the credentials file from environment variables
-        envsubst < /credentials/${DNS_PROVIDER,,} > /credentials/${DNS_PROVIDER,,}
+        envsubst < /credentials/${DNS_PROVIDER,,}.template > /credentials/${DNS_PROVIDER,,}
 
         # Run certbot
         if [[ ${DNS_PROVIDER,,} = cloudflare ]];
