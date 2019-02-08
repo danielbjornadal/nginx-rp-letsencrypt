@@ -7,5 +7,7 @@ stages:
       tag: bjornadalno/nginx-rp-letsencrypt:test
       pushRemote: true
       registry: index.docker.io
+    env:
+      PLUGIN_DEBUG: "true"
 timeout: 60
 notification: {}
