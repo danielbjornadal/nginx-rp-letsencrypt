@@ -4,7 +4,7 @@ stages:
   - publishImageConfig:
       dockerfilePath: ./Dockerfile
       buildContext: .
-      tag: bjornadalno/nginx-rp-letsencrypt:${CICD_GIT_BRANCH}}
+      tag: bjornadalno/nginx-rp-letsencrypt:${CICD_GIT_BRANCH}
       pushRemote: true
       registry: index.docker.io
     env:
