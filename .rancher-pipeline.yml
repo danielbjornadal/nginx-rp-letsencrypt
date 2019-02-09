@@ -4,7 +4,7 @@ stages:
   - publishImageConfig:
       dockerfilePath: ./Dockerfile
       buildContext: .
-      tag: bjornadalno/nginx-rp-letsencrypt:latest, bjornadalno/nginx-rp-letsencrypt:test
+      tag: bjornadalno/nginx-rp-letsencrypt:latest,test
       registry: index.docker.io
 timeout: 60
 notification: {}
