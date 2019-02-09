@@ -3,6 +3,6 @@ stages:
   steps:
   - runScriptConfig:
       image: node:latest
-      shellScript: docker ls
+      shellScript: ls -la
 timeout: 60
 notification: {}
