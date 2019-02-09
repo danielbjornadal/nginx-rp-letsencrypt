@@ -1,8 +1,12 @@
 stages:
-- name: asd
+- name: Test
   steps:
   - runScriptConfig:
       image: node:latest
-      shellScript: ls -la
+      shellScript: |-
+        npm install
+        npm run build
+        npm run start
+        npm run tests
 timeout: 60
 notification: {}
