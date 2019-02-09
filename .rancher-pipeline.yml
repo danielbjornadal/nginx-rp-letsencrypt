@@ -1,25 +1,22 @@
 stages:
-- name: build
-  steps:
-  - publishImageConfig:
-      dockerfilePath: ./Dockerfile
-      buildContext: .
-      tag: bjornadalno/nginx-rp-letsencrypt:latest
-      pushRemote: true
-      registry: index.docker.io
-    env:
-      PLUGIN_DEBUG: "true"
-      PLUGIN_INSECURE: "true"
-  - publishImageConfig:
-      dockerfilePath: ./Dockerfile
-      buildContext: .
-      tag: bjornadalno/nginx-rp-letsencrypt:stable
-      pushRemote: true
-      registry: index.docker.io
 - name: asd
   steps:
   - runScriptConfig:
       image: node:latest
-      shellScript: console.log("asd");
+      shellScript: |-
+        echo "CICD_GIT_REPO_NAME: ${CICD_GIT_REPO_NAME}}}"
+        echo "CICD_GIT_URL: ${CICD_GIT_URL}}"
+        echo "CICD_GIT_COMMIT: ${CICD_GIT_COMMIT}}"
+        echo "CICD_GIT_REF: ${CICD_GIT_REF}}"
+        echo "CICD_GIT_BRANCH: ${CICD_GIT_BRANCH}}"
+        echo "CICD_GIT_TAG: ${CICD_GIT_TAG}}"
+        echo "CICD_TRIGGER_TYPE: ${CICD_TRIGGER_TYPE}}"
+        echo "CICD_EVENT: ${CICD_EVENT}}"
+        echo "CICD_EXECUTION_ID: ${CICD_EXECUTION_ID}}"
+        echo "CICD_EXECUTION_SEQUENCE: ${CICD_EXECUTION_SEQUENCE}}"
+        echo "CICD_PIPELINE_ID: ${CICD_PIPELINE_ID}}"
+        echo "CICD_PROJECT_ID: ${CICD_PROJECT_ID}}"
+        echo "CICD_CLUSTER_ID: ${CICD_CLUSTER_ID}}"
+        echo "CICD_LOCAL_REGISTRY: ${CICD_LOCAL_REGISTRY}}"
 timeout: 60
 notification: {}
