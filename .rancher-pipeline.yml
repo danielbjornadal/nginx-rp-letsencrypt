@@ -4,11 +4,18 @@ stages:
   - publishImageConfig:
       dockerfilePath: ./Dockerfile
       buildContext: .
-      tag: bjornadalno/nginx-rp-letsencrypt:test
+      tag: bjornadalno/nginx-rp-letsencrypt:${CICD_GIT_BRANCH}}
       pushRemote: true
       registry: index.docker.io
     env:
       PLUGIN_DEBUG: "true"
       PLUGIN_INSECURE: "true"
+- name: asd
+  steps:
+  - runScriptConfig:
+      image: node:latest
+      shellScript: |2-
+
+        console.log(${CICD_GIT_URL})
 timeout: 60
 notification: {}
