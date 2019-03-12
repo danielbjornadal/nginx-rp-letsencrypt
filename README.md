@@ -6,6 +6,7 @@ The following DNS Providers/Validators is supported
 * Selfsigned certificates
 * HTTP Challenge
 * CloudFlare DNS 
+ 
 
 > [wikipedia.org/wiki/Nginx](https://en.wikipedia.org/wiki/Nginx)
 
